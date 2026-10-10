@@ -13,7 +13,8 @@ import {
   FileText, 
   Wrench,
   Zap,
-  Info
+  Info,
+  Fingerprint
 } from "lucide-react";
 import { getVehicles } from "../logic/storage";
 import { StatCard } from "../components/StatCard";
@@ -151,6 +152,34 @@ export function Dashboard() {
             );
           })}
         </div>
+      </div>
+
+      {/* Simulated Device Whitelisting Feature Banner */}
+      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-start space-x-3.5">
+          <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shrink-0 mt-0.5">
+            <Fingerprint className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2 flex-wrap">
+              <h3 className="text-sm font-bold text-slate-900">Device Whitelisting & Access Control</h3>
+              <span className="text-[10px] font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                Simulated Module
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 mt-1 max-w-2xl leading-relaxed">
+              Model wireless MAC / diagnostic tool access authorization before establishing connected BMS telemetry sessions. Test authorized, revoked, and unknown scanner decisions in real-time.
+            </p>
+          </div>
+        </div>
+
+        <Link
+          to="/whitelist"
+          className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1.5 shrink-0"
+        >
+          <span>Open Whitelist Simulator</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
 
       {/* Priority Vehicles Requiring Attention */}

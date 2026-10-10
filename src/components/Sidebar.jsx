@@ -9,7 +9,8 @@ import {
   Zap, 
   RotateCcw,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Fingerprint
 } from "lucide-react";
 import { useToast } from "../context/ToastContext";
 import { resetFleetToInitial } from "../logic/storage";
@@ -29,6 +30,7 @@ export function Sidebar({ isOpen, onClose }) {
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/vehicles", label: "Vehicle Fleet", icon: Car },
     { to: "/fleet", label: "Fleet Security Overview", icon: BarChart3 },
+    { to: "/whitelist", label: "Device Whitelisting", icon: Fingerprint },
     { to: "/settings", label: "Settings & Disclaimers", icon: Settings },
   ];
 

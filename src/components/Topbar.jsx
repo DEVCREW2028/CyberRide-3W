@@ -14,6 +14,7 @@ export function Topbar({ onToggleSidebar }) {
   else if (location.pathname.startsWith("/remediation/")) pageTitle = "Remediation Workflow";
   else if (location.pathname.startsWith("/report/")) pageTitle = "Security Readiness Report";
   else if (location.pathname === "/fleet") pageTitle = "Fleet Security Overview";
+  else if (location.pathname === "/whitelist") pageTitle = "Device Whitelisting & Access Control";
   else if (location.pathname === "/settings") pageTitle = "Settings & About";
 
   return (

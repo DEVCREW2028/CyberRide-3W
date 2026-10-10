@@ -76,6 +76,9 @@ Generate a print-friendly report containing assessment findings, risk informatio
 ### 7. Local-First Prototype
 Use simulated data and browser-based persistence without requiring a cloud backend or external API.
 
+### 8. Device Whitelisting & Access Control Simulator
+Simulate Bluetooth/wireless MAC and identity whitelisting for workshop diagnostic tablets and service tools. Test authorized, revoked, and unknown device access attempts in real-time, backed by a persistent registry and security event audit log.
+
 ---
 
 ## How the Prototype Works
@@ -175,6 +178,20 @@ Open the local URL displayed in your terminal. With the default Vite configurati
 
 ```text
 http://localhost:5173
+```
+
+### 4. Run Automated Tests
+
+To run the automated test suite for Device Whitelisting, access control evaluation, validation rules, and persistence:
+
+```bash
+npm test
+```
+
+### 5. Build for Production
+
+```bash
+npm run build
 ```
 
 If the project is already present on your computer, open its directory and run the installation and development commands there.
