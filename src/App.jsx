@@ -13,6 +13,7 @@ import { Report } from "./pages/Report";
 import { Fleet } from "./pages/Fleet";
 import { Settings } from "./pages/Settings";
 import { Whitelist } from "./pages/Whitelist";
+import { Pairing } from "./pages/Pairing";
 import { EmptyState } from "./components/EmptyState";
 import { useNavigate } from "react-router-dom";
 
@@ -58,6 +59,7 @@ export function App() {
               <Route path="/report/:id" element={<Report />} />
               <Route path="/fleet" element={<Fleet />} />
               <Route path="/whitelist" element={<Whitelist />} />
+              <Route path="/pairing" element={<Pairing />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

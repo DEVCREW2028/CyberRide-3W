@@ -79,6 +79,9 @@ Use simulated data and browser-based persistence without requiring a cloud backe
 ### 8. Device Whitelisting & Access Control Simulator
 Simulate Bluetooth/wireless MAC and identity whitelisting for workshop diagnostic tablets and service tools. Test authorized, revoked, and unknown device access attempts in real-time, backed by a persistent registry and security event audit log.
 
+### 9. Strong BLE Pairing Security Simulator
+Simulate Bluetooth Low Energy (BLE) pairing security profiles for connected e-rickshaws. Models **LE Secure Connections** (ECDH P-256 key exchange), **Authenticated Pairing** (Numeric Comparison / MITM protection), and **AES-CCM Link Encryption**, strictly integrated with the Device Whitelisting registry as the source of truth.
+
 ---
 
 ## How the Prototype Works
@@ -238,6 +241,41 @@ CyberRide 3W is a hackathon prototype demonstrating a simulated security-readine
 Simulated remediation changes the prototype's assessment state; it does not change a physical BMS.
 
 Real-world deployment would require authorized access to compatible hardware, validation against actual BMS implementations, and further security testing.
+
+---
+
+## Strong BLE Pairing Simulation Guide
+
+CyberRide 3W provides an interactive simulator to demonstrate the difference between secure pairing configurations and vulnerable, legacy Bluetooth pairing implementations.
+
+### Why Secure BLE Pairing Matters
+In connected electric three-wheelers, weak or unauthenticated Bluetooth pairing enables attackers within radio range to sniff battery telemetry or send spoofed shut-off commands to the BMS contactor/MOSFET.
+
+### Pairing Demo Scenarios
+1. **Scenario A — Secure LE Pairing:** Select an Authorized device (e.g. `TECH-TAB-01`) + LE Secure Connections (ECDH P-256) + Authenticated Numeric Comparison + AES-CCM Encryption Enabled.  
+   *Result:* `SECURE CONFIGURATION (SIMULATED)` (Allowed).
+2. **Scenario B — Unknown Device:** Enter an unregistered device ID (e.g. `ROGUE-BLE-SCANNER-99`).  
+   *Result:* `PAIRING DENIED` (*"Device not registered in active whitelist registry"*).
+3. **Scenario C — Revoked Device:** Select a revoked device ID (e.g. `TECH-PHN-OLD`).  
+   *Result:* `PAIRING DENIED` (*"Device authorization revoked in whitelist registry"*).
+4. **Scenario D — Weak Just Works Method:** Authorized device with *Legacy Just Works* pairing.  
+   *Result:* `WEAK CONFIGURATION (SIMULATED)` (Flagged as WEAK; lacks MITM protection).
+5. **Scenario E — Plaintext (Encryption Disabled):** Authorized device with link encryption disabled.  
+   *Result:* `WEAK CONFIGURATION (SIMULATED)` (Flagged as WEAK; plaintext risk).
+6. **Scenario F — Rogue Device with Secure Options:** Unknown device attempting LE Secure Connections with encryption.  
+   *Result:* `PAIRING DENIED` (*Strong pairing options cannot bypass device authorization*).
+
+### Real-World Hardware & Stack Requirements
+Enforcing real BLE LE Secure Connections requires:
+- Bluetooth 4.2+ compliant controller and link layer.
+- An operating system/firmware BLE stack with ECDH P-256 key generation and verification.
+- Out-of-band or display/input capabilities for numeric comparison or authenticated passkey entry.
+- A web UI alone cannot force secure pairing onto physical BMS hardware.
+
+---
+
+## AI Assistant Disclosure
+In accordance with hackathon guidelines, artificial intelligence coding assistance (Antigravity by Google DeepMind) was utilized during development for code structuring, component implementation, deterministic test case authoring, and documentation refinement. All logic, test suites, and simulated security evaluations have been verified by Team DevCrew.
 
 ---
 

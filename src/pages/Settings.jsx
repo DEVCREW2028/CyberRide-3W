@@ -10,9 +10,11 @@ import {
   CheckCircle2,
   AlertTriangle,
   FileCheck,
-  ExternalLink
+  ExternalLink,
+  Bluetooth
 } from "lucide-react";
 import { resetFleetToInitial } from "../logic/storage";
+import { resetPairingDemoData } from "../logic/pairing";
 import { useToast } from "../context/ToastContext";
 
 export function Settings() {
@@ -23,6 +25,13 @@ export function Settings() {
       resetFleetToInitial();
       addToast("Demo baseline successfully restored.", "info");
       window.location.reload();
+    }
+  };
+
+  const handleResetPairing = () => {
+    if (window.confirm("Reset Strong BLE Pairing simulation logs to default baseline?")) {
+      resetPairingDemoData();
+      addToast("Pairing simulation audit logs restored.", "info");
     }
   };
 
@@ -110,22 +119,42 @@ export function Settings() {
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50">
-          <div>
-            <h4 className="text-xs font-bold text-slate-900">Reset Vehicle Fleet & Assessments</h4>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Restores CR3W-001, CR3W-002, and CR3W-003 initial risk scores and profiles.
-            </p>
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Reset Vehicle Fleet & Assessments</h4>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Restores CR3W-001, CR3W-002, and CR3W-003 initial risk scores and profiles.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleReset}
+              className="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset Fleet Baseline</span>
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={handleReset}
-            className="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset Fleet Baseline</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Reset Strong BLE Pairing Logs</h4>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Restores initial pairing simulation audit events without touching whitelist registry or fleet.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleResetPairing}
+              className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset Pairing Logs</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
