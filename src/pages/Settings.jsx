@@ -11,10 +11,12 @@ import {
   AlertTriangle,
   FileCheck,
   ExternalLink,
-  Bluetooth
+  Bluetooth,
+  KeyRound
 } from "lucide-react";
 import { resetFleetToInitial } from "../logic/storage";
 import { resetPairingDemoData } from "../logic/pairing";
+import { resetAuthDemoData } from "../logic/challengeAuth";
 import { useToast } from "../context/ToastContext";
 
 export function Settings() {
@@ -32,6 +34,13 @@ export function Settings() {
     if (window.confirm("Reset Strong BLE Pairing simulation logs to default baseline?")) {
       resetPairingDemoData();
       addToast("Pairing simulation audit logs restored.", "info");
+    }
+  };
+
+  const handleResetAuth = () => {
+    if (window.confirm("Reset Challenge–Response authentication logs and active nonces to default baseline?")) {
+      resetAuthDemoData();
+      addToast("Challenge–Response authentication logs restored.", "info");
     }
   };
 
@@ -153,6 +162,24 @@ export function Settings() {
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset Pairing Logs</span>
+            </button>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Reset Challenge–Response Auth Logs</h4>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Clears active in-memory challenges and restores default authentication demo logs.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleResetAuth}
+              className="px-3.5 py-2 bg-violet-600 hover:bg-violet-700 text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset Auth Logs</span>
             </button>
           </div>
         </div>

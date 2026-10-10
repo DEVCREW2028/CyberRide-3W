@@ -15,7 +15,8 @@ import {
   Zap,
   Info,
   Fingerprint,
-  Bluetooth
+  Bluetooth,
+  KeyRound
 } from "lucide-react";
 import { getVehicles } from "../logic/storage";
 import { StatCard } from "../components/StatCard";
@@ -155,8 +156,8 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* Simulated Wireless Security Modules (Whitelisting & Strong BLE Pairing) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Simulated Wireless Security Modules (Whitelisting, BLE Pairing, Challenge-Response) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Device Whitelisting Module */}
         <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
           <div className="flex items-start space-x-3.5">
@@ -195,9 +196,9 @@ export function Dashboard() {
             </div>
             <div>
               <div className="flex items-center space-x-2 flex-wrap">
-                <h3 className="text-sm font-bold text-slate-900">Strong BLE Pairing Security</h3>
+                <h3 className="text-sm font-bold text-slate-900">Strong BLE Pairing</h3>
                 <span className="text-[10px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-                  LE Secure Connections
+                  LE Secure Conn.
                 </span>
               </div>
               <p className="text-xs text-slate-600 mt-1 leading-relaxed">
@@ -212,6 +213,36 @@ export function Dashboard() {
               className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1.5"
             >
               <span>Pairing Simulator</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Strong Challenge–Response Authentication Module */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+          <div className="flex items-start space-x-3.5">
+            <div className="w-10 h-10 rounded-xl bg-violet-600 text-white flex items-center justify-center shadow-md shrink-0 mt-0.5">
+              <KeyRound className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <div className="flex items-center space-x-2 flex-wrap">
+                <h3 className="text-sm font-bold text-slate-900">Challenge–Response Auth</h3>
+                <span className="text-[10px] font-mono font-bold text-violet-700 bg-violet-50 px-2 py-0.5 rounded border border-violet-200">
+                  HMAC-SHA-256
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                Prove diagnostic tool identity via fresh nonces, prevent replay attacks, and enforce pairing prerequisites.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2 flex items-center justify-end">
+            <Link
+              to="/auth"
+              className="px-3.5 py-2 bg-violet-600 hover:bg-violet-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1.5"
+            >
+              <span>Auth Simulator</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

@@ -11,7 +11,8 @@ import {
   Sparkles,
   ExternalLink,
   Fingerprint,
-  Bluetooth
+  Bluetooth,
+  KeyRound
 } from "lucide-react";
 import { useToast } from "../context/ToastContext";
 import { resetFleetToInitial } from "../logic/storage";
@@ -33,6 +34,7 @@ export function Sidebar({ isOpen, onClose }) {
     { to: "/fleet", label: "Fleet Security Overview", icon: BarChart3 },
     { to: "/whitelist", label: "Device Whitelisting", icon: Fingerprint },
     { to: "/pairing", label: "Strong BLE Pairing", icon: Bluetooth },
+    { to: "/auth", label: "Challenge–Response Auth", icon: KeyRound },
     { to: "/settings", label: "Settings & Disclaimers", icon: Settings },
   ];
 

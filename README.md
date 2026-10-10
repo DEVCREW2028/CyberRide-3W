@@ -82,6 +82,9 @@ Simulate Bluetooth/wireless MAC and identity whitelisting for workshop diagnosti
 ### 9. Strong BLE Pairing Security Simulator
 Simulate Bluetooth Low Energy (BLE) pairing security profiles for connected e-rickshaws. Models **LE Secure Connections** (ECDH P-256 key exchange), **Authenticated Pairing** (Numeric Comparison / MITM protection), and **AES-CCM Link Encryption**, strictly integrated with the Device Whitelisting registry as the source of truth.
 
+### 10. Strong Challenge–Response Authentication Simulator
+Simulate cryptographic mutual authentication between authorized diagnostic tools and connected BMS units. Utilizes fresh 256-bit cryptographically secure nonces (`crypto.getRandomValues`), HMAC-SHA-256 signature verification via the Web Crypto API (`crypto.subtle`), strict single-use replay protection, time-based expiration, and enforcement of whitelisting and BLE pairing prerequisites. Demo secrets remain strictly ephemeral and are never persisted or exposed.
+
 ---
 
 ## How the Prototype Works
@@ -271,6 +274,48 @@ Enforcing real BLE LE Secure Connections requires:
 - An operating system/firmware BLE stack with ECDH P-256 key generation and verification.
 - Out-of-band or display/input capabilities for numeric comparison or authenticated passkey entry.
 - A web UI alone cannot force secure pairing onto physical BMS hardware.
+
+---
+
+## Strong Challenge–Response Authentication Simulation Guide
+
+CyberRide 3W provides an interactive cryptographic authentication simulator to demonstrate how a BMS can verify that a connected service tool actually possesses the authorized cryptographic credential before allowing sensitive actions (such as cell balancing calibration, over-current threshold adjustments, or contactor override).
+
+### Why Challenge–Response Authentication Matters
+Even when a diagnostic tool is whitelisted and linked over encrypted BLE, static credentials or unauthenticated session tokens can be intercepted, captured, or spoofed. Challenge–response authentication ensures:
+1. **Freshness:** Every interaction requires answering a freshly minted 256-bit cryptographic nonce.
+2. **Replay Protection:** A captured response cannot be re-sent because each challenge nonce is permanently consumed on the first verification attempt.
+3. **Proof of Possession:** The prover demonstrates knowledge of a shared secret via HMAC-SHA-256 without ever transmitting the secret across the wireless interface.
+
+### Cryptographic Implementation Details
+- **Random Nonce Generation:** Uses `crypto.getRandomValues(new Uint8Array(32))` to generate 32 unpredictable bytes (64 hex characters). `Math.random()` is **never** used for security tokens.
+- **HMAC-SHA-256 Verification:** Computed independently on the client and verifier using standard Web Crypto API (`crypto.subtle.importKey` and `crypto.subtle.sign`).
+- **Fail-Closed Design:** If Web Crypto API is unavailable in an insecure environment, the system fails closed with `CRYPTOGRAPHIC API UNAVAILABLE`.
+- **Zero Key Disclosure:** Demonstration keys are derived deterministically in volatile memory for the demo session. Keys are never logged in audit trails, never stored in `localStorage`, and never exposed in the UI.
+
+### Interactive Demonstration Scenarios
+1. **Scenario 1 — Valid Authentication:**  
+   Authorized device (`TECH-TAB-01`) + fresh unused challenge + correct HMAC-SHA-256 response + BLE pairing active.  
+   *Result:* `AUTHENTICATION SUCCESSFUL (SIMULATED)` (Proof accepted, challenge consumed).
+2. **Scenario 2 — Tampered Response:**  
+   Valid challenge with a modified or incorrect cryptographic response string.  
+   *Result:* `INVALID RESPONSE` (*"HMAC-SHA-256 signature verification failed"*).
+3. **Scenario 3 — Replay Attack:**  
+   Re-submitting an identical response using a challenge that was already verified and marked `CONSUMED`.  
+   *Result:* `CHALLENGE ALREADY USED` (*"Challenge has already been consumed / single-use violation"*).
+4. **Scenario 4 — Expired Challenge:**  
+   Attempting to verify a challenge whose 60-second validity window has lapsed.  
+   *Result:* `CHALLENGE EXPIRED` (*"Challenge expired past 60s validity timeout"*).
+5. **Scenario 5 — Revoked / Unknown Device:**  
+   Attempting authentication with a revoked (`TECH-PHN-OLD`) or unregistered device ID.  
+   *Result:* `DEVICE NOT AUTHORIZED` (*"Device is not authorized in whitelist registry"*).
+6. **Scenario 6 — Unpaired Device (Prerequisite Check):**  
+   Authorized device with a valid HMAC, but BLE pairing prerequisite disabled or not established.  
+   *Result:* `AUTHENTICATION DENIED` (*"BLE pairing not established or device unpaired"*).
+
+### Simulation Limitations vs. Real Hardware
+- In production EV BMS architectures, secrets must reside in a Hardware Security Module (HSM), secure element (e.g., ATECC608), or secure microcontroller enclave (e.g., STM32 / ESP32 secure boot and encrypted flash).
+- This browser-based module illustrates the protocol state machine, nonce consumption, and replay rejection principles; it does **not** communicate with physical vehicle microcontrollers or real Bluetooth transceivers.
 
 ---
 
