@@ -9,7 +9,8 @@
     "dev:all": "node server/index.js & vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test src/logic/*.test.js"
+    "test": "node --test src/logic/*.test.js",
+    "start": "node server/index.js"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",

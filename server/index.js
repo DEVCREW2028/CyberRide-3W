@@ -1,5 +1,8 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 import { CHECK_DEFINITIONS, runSecurityAssessment, getRemediatedProfile } from "../src/logic/assessmentEngine.js";
 import { INITIAL_VEHICLES } from "../src/data/mockVehicles.js";
 import { REMEDIATION_STEPS } from "../src/data/remediationActions.js";
@@ -194,6 +197,34 @@ app.post("/api/reset", (req, res) => {
   runtimeAssessments = {};
   res.json({ message: "Fleet baseline reset successfully." });
 });
+
+// Serve frontend production build if dist directory exists
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.join(__dirname, "../dist");
+
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/")) return next();
+    res.sendFile(path.join(distPath, "index.html"));
+  });
+} else {
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/")) return next();
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>CyberRide 3W Backend</title></head>
+        <body style="font-family:sans-serif; text-align:center; padding: 50px;">
+          <h2>CyberRide 3W Assessment Backend API is running!</h2>
+          <p>Frontend UI runs on <strong><a href="http://localhost:5173">http://localhost:5173</a></strong> (via <code>npm run dev</code>)</p>
+          <p>Or build the frontend to serve everything on this port: <code>npm run build</code></p>
+        </body>
+      </html>
+    `);
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`[CyberRide 3W Backend] Assessment API listening on http://localhost:${PORT}`);
