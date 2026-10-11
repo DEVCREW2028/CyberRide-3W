@@ -30,7 +30,8 @@ export const CHECK_DEFINITIONS = [
           score: 0,
           detected: profile.wirelessInterface,
           explanation: "The BMS only advertises or accepts connections from bonded workshop devices. Public open broadcast is disabled.",
-          remediation: "Maintain whitelisted MAC policy and periodic key rotation."
+          remediation: "Maintain whitelisted MAC policy and periodic key rotation.",
+          matchedRule: "whitelisted_pairing_detected"
         };
       } else if (val.includes("public open broadcast") || val.includes("standard service")) {
         return {
@@ -39,7 +40,8 @@ export const CHECK_DEFINITIONS = [
           score: 1,
           detected: profile.wirelessInterface,
           explanation: "The BMS continuously advertises generic Bluetooth services in public space, making it discoverable to any nearby phone scanner.",
-          remediation: "Configure stealth broadcast or implement physical pairing activation button."
+          remediation: "Configure stealth broadcast or implement physical pairing activation button.",
+          matchedRule: "public_broadcast_detected"
         };
       } else {
         return {
@@ -48,7 +50,8 @@ export const CHECK_DEFINITIONS = [
           score: 2,
           detected: profile.wirelessInterface,
           explanation: "Open unauthenticated GATT UART services are actively exposed over Bluetooth without service filtering.",
-          remediation: "Disable open UART GATT services and restrict broadcast visibility to authorized maintenance sessions."
+          remediation: "Disable open UART GATT services and restrict broadcast visibility to authorized maintenance sessions.",
+          matchedRule: "open_uart_gatt_detected"
         };
       }
     }
@@ -67,7 +70,8 @@ export const CHECK_DEFINITIONS = [
           score: 0,
           detected: profile.authentication,
           explanation: "Cryptographic challenge-response or dynamic authenticated passkey is active, preventing brute-force PIN guessing.",
-          remediation: "Keep master technician authentication keys securely backed up."
+          remediation: "Keep master technician authentication keys securely backed up.",
+          matchedRule: "cryptographic_passkey_detected"
         };
       } else if (val.includes("static") || val.includes("single-factor")) {
         return {
@@ -76,7 +80,8 @@ export const CHECK_DEFINITIONS = [
           score: 1,
           detected: profile.authentication,
           explanation: "The BMS uses a weak static PIN (e.g. 000000 or 1234) which can be easily guessed by unauthorized users in proximity.",
-          remediation: "Replace factory-default PIN with an individualized strong alphanumeric technician passkey."
+          remediation: "Replace factory-default PIN with an individualized strong alphanumeric technician passkey.",
+          matchedRule: "static_pin_detected"
         };
       } else {
         return {
@@ -85,7 +90,8 @@ export const CHECK_DEFINITIONS = [
           score: 2,
           detected: profile.authentication,
           explanation: "No authentication or default factory password detected. Any nearby phone can establish a direct control session.",
-          remediation: "Enable authenticated access, enforce non-default master credentials, and require physical authorization."
+          remediation: "Enable authenticated access, enforce non-default master credentials, and require physical authorization.",
+          matchedRule: "missing_auth_detected"
         };
       }
     }
@@ -104,7 +110,8 @@ export const CHECK_DEFINITIONS = [
           score: 0,
           detected: profile.unauthorizedAccess,
           explanation: "Access controls reject arbitrary client devices. Connection requests from unregistered phones are dropped immediately.",
-          remediation: "Ensure workshop diagnostic tablets are enrolled in the trusted device list."
+          remediation: "Ensure workshop diagnostic tablets are enrolled in the trusted device list.",
+          matchedRule: "access_blocked_mutual_auth"
         };
       } else if (val.includes("possible without") || val.includes("possible via")) {
         return {
@@ -113,7 +120,8 @@ export const CHECK_DEFINITIONS = [
           score: 1,
           detected: profile.unauthorizedAccess,
           explanation: "Generic Bluetooth scanning applications can attach to the peripheral and read telemetry characteristics.",
-          remediation: "Bind BMS connection permissions to registered workshop technician IDs."
+          remediation: "Bind BMS connection permissions to registered workshop technician IDs.",
+          matchedRule: "generic_ble_scan_attachable"
         };
       } else {
         return {
@@ -122,7 +130,8 @@ export const CHECK_DEFINITIONS = [
           score: 2,
           detected: profile.unauthorizedAccess,
           explanation: "Any third-party smartphone app can initiate a session without physical proximity or owner authorization.",
-          remediation: "Implement device binding and restrict connection establishment to authenticated technician apps."
+          remediation: "Implement device binding and restrict connection establishment to authenticated technician apps.",
+          matchedRule: "unrestricted_third_party_access"
         };
       }
     }
@@ -141,7 +150,8 @@ export const CHECK_DEFINITIONS = [
           score: 0,
           detected: profile.safetyCommands,
           explanation: "Critical operations (discharge shut-off, emergency cut-off, MOSFET override) require physical hardware interlock confirmation.",
-          remediation: "Keep physical interlock switches inspected during regular EV servicing."
+          remediation: "Keep physical interlock switches inspected during regular EV servicing.",
+          matchedRule: "hardware_interlock_enforced"
         };
       } else if (val.includes("rate-limited") || val.includes("protected by 4-digit")) {
         return {
@@ -150,7 +160,8 @@ export const CHECK_DEFINITIONS = [
           score: 1,
           detected: profile.safetyCommands,
           explanation: "Power cut-off commands require basic software PIN, but lack hardware failsafe during vehicle motion.",
-          remediation: "Enforce safety-critical interlocks to prevent sudden power disconnection while the vehicle is in drive state."
+          remediation: "Enforce safety-critical interlocks to prevent sudden power disconnection while the vehicle is in drive state.",
+          matchedRule: "soft_pin_without_hardware_interlock"
         };
       } else {
         return {
@@ -159,7 +170,8 @@ export const CHECK_DEFINITIONS = [
           score: 2,
           detected: profile.safetyCommands,
           explanation: "Safety-critical commands (remote battery disconnect & MOSFET override) are exposed over wireless interface without protection. An unauthorized command could cut power abruptly in traffic.",
-          remediation: "Isolate remote power disconnect from wireless interface or enforce cryptographic safety interlocks."
+          remediation: "Isolate remote power disconnect from wireless interface or enforce cryptographic safety interlocks.",
+          matchedRule: "unprotected_remote_cutoff_exposed"
         };
       }
     }
@@ -178,7 +190,8 @@ export const CHECK_DEFINITIONS = [
           score: 0,
           detected: profile.configProtection,
           explanation: "BMS cell voltage thresholds (OVP/UVP/OTP) and capacity calibration are write-locked and cryptographically signed.",
-          remediation: "Store master configuration templates in the secure workshop repository."
+          remediation: "Store master configuration templates in the secure workshop repository.",
+          matchedRule: "signed_or_encrypted_write_lock"
         };
       } else if (val.includes("basic password") || val.includes("weak pin")) {
         return {
@@ -187,7 +200,8 @@ export const CHECK_DEFINITIONS = [
           score: 1,
           detected: profile.configProtection,
           explanation: "Threshold parameter editing is protected only by a simple PIN, leaving thermal and overvoltage limits vulnerable to accidental or unauthorized modification.",
-          remediation: "Upgrade parameter write permissions to require dual-technician key verification."
+          remediation: "Upgrade parameter write permissions to require dual-technician key verification.",
+          matchedRule: "basic_password_protection"
         };
       } else {
         return {
@@ -196,7 +210,8 @@ export const CHECK_DEFINITIONS = [
           score: 2,
           detected: profile.configProtection,
           explanation: "Battery protection thresholds (Overvoltage, Undervoltage, Max Charge Current) are in plain unencrypted read/write registers. Tampering could cause thermal runaway or cell damage.",
-          remediation: "Lock parameter write registers and apply factory calibration seal."
+          remediation: "Lock parameter write registers and apply factory calibration seal.",
+          matchedRule: "unencrypted_read_write_parameters"
         };
       }
     }
@@ -215,7 +230,8 @@ export const CHECK_DEFINITIONS = [
           score: 0,
           detected: profile.wirelessAccessControl,
           explanation: "Bluetooth beacon shuts down automatically when vehicle is in motion or after 60 seconds of inactivity.",
-          remediation: "Verify timeout behavior during routine battery inspection."
+          remediation: "Verify timeout behavior during routine battery inspection.",
+          matchedRule: "pairing_timeout_or_physical_button"
         };
       } else if (val.includes("continuous advertisement")) {
         return {
@@ -224,7 +240,8 @@ export const CHECK_DEFINITIONS = [
           score: 1,
           detected: profile.wirelessAccessControl,
           explanation: "BMS continuously broadcasts wireless pairing beacons even when parked unattended in public charging spots.",
-          remediation: "Enable pairing timeout so Bluetooth radio powers down after key ignition."
+          remediation: "Enable pairing timeout so Bluetooth radio powers down after key ignition.",
+          matchedRule: "continuous_idle_advertisement"
         };
       } else {
         return {
@@ -233,7 +250,8 @@ export const CHECK_DEFINITIONS = [
           score: 2,
           detected: profile.wirelessAccessControl,
           explanation: "Unrestricted, always-on beacon allows tracking vehicle location and continuous connection attempts by unauthorized nearby parties.",
-          remediation: "Configure wireless sleep mode and restrict pairing to maintenance window."
+          remediation: "Configure wireless sleep mode and restrict pairing to maintenance window.",
+          matchedRule: "unrestricted_always_on_beacon"
         };
       }
     }
@@ -252,7 +270,8 @@ export const CHECK_DEFINITIONS = [
           score: 0,
           detected: profile.firmwareAccess,
           explanation: "Firmware updates require verified digital cryptographic signatures with hardware rollback protection.",
-          remediation: "Only flash firmware binaries sourced directly from approved OEM portals."
+          remediation: "Only flash firmware binaries sourced directly from approved OEM portals.",
+          matchedRule: "cryptographically_signed_ota"
         };
       } else if (val.includes("checksum") || val.includes("crc32") || val.includes("partially")) {
         return {
@@ -261,7 +280,8 @@ export const CHECK_DEFINITIONS = [
           score: 1,
           detected: profile.firmwareAccess,
           explanation: "Firmware upload checks simple CRC checksums only, which does not prevent modified or rogue firmware flash.",
-          remediation: "Require signature verification before accepting OTA firmware packets."
+          remediation: "Require signature verification before accepting OTA firmware packets.",
+          matchedRule: "checksum_crc32_only"
         };
       } else {
         return {
@@ -270,7 +290,8 @@ export const CHECK_DEFINITIONS = [
           score: 2,
           detected: profile.firmwareAccess,
           explanation: "Unsigned arbitrary binary upload is allowed over wireless interface, allowing malicious replacement of BMS control logic.",
-          remediation: "Disable unauthenticated OTA upload and lock firmware bootloader."
+          remediation: "Disable unauthenticated OTA upload and lock firmware bootloader.",
+          matchedRule: "unsigned_binary_upload_allowed"
         };
       }
     }
@@ -291,7 +312,8 @@ export function runSecurityAssessment(vehicle) {
       score: result.score,
       detected: result.detected,
       explanation: result.explanation,
-      remediation: result.remediation
+      remediation: result.remediation,
+      matchedRule: result.matchedRule
     };
   });
 
