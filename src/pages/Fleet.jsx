@@ -29,10 +29,12 @@ export function Fleet() {
   }, []);
 
   const total = vehicles.length;
+  const pendingCount = vehicles.filter(v => v.status === "Pending Scan" || !v.riskScore).length;
   const secureCount = vehicles.filter(v => v.status === "Secure").length;
   const warningCount = vehicles.filter(v => v.status === "Needs Attention").length;
   const highRiskCount = vehicles.filter(v => v.status === "High Risk").length;
 
+  const pendingPct = total > 0 ? Math.round((pendingCount / total) * 100) : 0;
   const securePct = total > 0 ? Math.round((secureCount / total) * 100) : 0;
   const warningPct = total > 0 ? Math.round((warningCount / total) * 100) : 0;
   const highRiskPct = total > 0 ? Math.round((highRiskCount / total) * 100) : 0;
@@ -44,6 +46,7 @@ export function Fleet() {
       v.workshopStation.toLowerCase().includes(search.toLowerCase());
 
     if (!matches) return false;
+    if (filter === "PENDING") return v.status === "Pending Scan" || !v.riskScore;
     if (filter === "SECURE") return v.status === "Secure";
     if (filter === "WARNING") return v.status === "Needs Attention";
     if (filter === "HIGH_RISK") return v.status === "High Risk";
@@ -139,12 +142,19 @@ export function Fleet() {
             Overall Fleet Security Posture
           </span>
           <span className="font-mono text-slate-500">
-            {secureCount} Secure • {warningCount} Warn • {highRiskCount} High Risk
+            {pendingCount > 0 ? `${pendingCount} Pending Scan • ` : ""}{secureCount} Secure • {warningCount} Warn • {highRiskCount} High Risk
           </span>
         </div>
 
         {/* Stacked Progress Bar */}
         <div className="w-full h-4 bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+          {pendingCount > 0 && (
+            <div
+              className="bg-slate-400 h-full transition-all duration-500"
+              style={{ width: `${pendingPct}%` }}
+              title={`Pending Scan: ${pendingPct}%`}
+            />
+          )}
           <div
             className="bg-emerald-500 h-full transition-all duration-500"
             style={{ width: `${securePct}%` }}
@@ -163,6 +173,12 @@ export function Fleet() {
         </div>
 
         <div className="flex flex-wrap items-center gap-6 pt-1 text-xs">
+          {pendingCount > 0 && (
+            <div className="flex items-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-slate-400" />
+              <span className="text-slate-600 font-medium">Pending Scan ({pendingPct}%)</span>
+            </div>
+          )}
           <div className="flex items-center space-x-2">
             <span className="w-3 h-3 rounded-full bg-emerald-500" />
             <span className="text-slate-600 font-medium">Secure ({securePct}%)</span>
@@ -206,6 +222,7 @@ export function Fleet() {
               className="bg-slate-50 border border-slate-200 rounded-lg text-xs px-2.5 py-1.5 text-slate-700 font-semibold focus:outline-none cursor-pointer"
             >
               <option value="ALL">All Status</option>
+              {pendingCount > 0 && <option value="PENDING">Pending Scan ({pendingCount})</option>}
               <option value="SECURE">Secure Only</option>
               <option value="WARNING">Needs Attention</option>
               <option value="HIGH_RISK">High Risk</option>

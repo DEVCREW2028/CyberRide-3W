@@ -22,3 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+CODEBASE_CONTEXT.txt
+PROJECT_STRUCTURE.txt

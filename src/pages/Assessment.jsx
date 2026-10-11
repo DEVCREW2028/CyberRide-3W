@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { getVehicleById, saveAssessmentResult } from "../logic/storage";
 import { runSecurityAssessment } from "../logic/assessmentEngine";
+import { assessVehicle } from "../logic/api";
 import { AssessmentCheck } from "../components/AssessmentCheck";
 import { RiskBadge } from "../components/RiskBadge";
 import { useToast } from "../context/ToastContext";
@@ -35,11 +36,12 @@ export function Assessment() {
   const scanSteps = [
     "Discovering BLE GATT Services & Advertised UUIDs...",
     "Querying Authentication Handshake & Pairing PIN Requirement...",
+    "Transmitting Telemetry to Backend Engine (POST /api/assess)...",
     "Testing Access Control Policies & Whitelisting...",
     "Probing Safety-Critical Command Handlers (Discharge Cutoff)...",
     "Auditing BMS Parameter Registers & Calibration Lock...",
-    "Verifying Wireless Session Timeout & Broadcast Sleep...",
-    "Evaluating Firmware Bootloader & OTA Signature Integrity..."
+    "Calculating Penalty Sum & Normalized Risk Index (0-10)...",
+    "Evaluating Firmware Bootloader & Finalizing Posture..."
   ];
 
   useEffect(() => {
@@ -51,12 +53,12 @@ export function Assessment() {
     }
   }, [id]);
 
-  const handleRunAssessment = () => {
+  const handleRunAssessment = async () => {
     if (!vehicle) return;
     setIsScanning(true);
     setScanStep(0);
 
-    // Short realistic step progression (around 1.4s total)
+    // Realistic step progression
     const interval = setInterval(() => {
       setScanStep((prev) => {
         if (prev < scanSteps.length - 1) {
@@ -66,17 +68,27 @@ export function Assessment() {
           return prev;
         }
       });
-    }, 200);
+    }, 220);
 
-    setTimeout(() => {
+    try {
+      const outcome = await assessVehicle(vehicle);
+      setTimeout(() => {
+        clearInterval(interval);
+        setAssessment(outcome.assessment);
+        setIsScanning(false);
+        addToast(
+          outcome.source === "backend-api"
+            ? `Backend engine successfully evaluated ${vehicle.id}.`
+            : `Security assessment completed for ${vehicle.id}.`,
+          "success"
+        );
+        navigate(`/results/${vehicle.id}`);
+      }, 1600);
+    } catch (e) {
       clearInterval(interval);
-      const res = runSecurityAssessment(vehicle);
-      setAssessment(res);
-      saveAssessmentResult(vehicle.id, res, vehicle.isRemediated);
       setIsScanning(false);
-      addToast(`Security assessment completed for ${vehicle.id}.`, "success");
       navigate(`/results/${vehicle.id}`);
-    }, 1500);
+    }
   };
 
   if (!vehicle || !assessment) {

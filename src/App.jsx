@@ -12,9 +12,13 @@ import { Remediation } from "./pages/Remediation";
 import { Report } from "./pages/Report";
 import { Fleet } from "./pages/Fleet";
 import { Settings } from "./pages/Settings";
+<<<<<<< HEAD
 import { Whitelist } from "./pages/Whitelist";
 import { Pairing } from "./pages/Pairing";
 import { ChallengeAuth } from "./pages/ChallengeAuth";
+=======
+import { WorkshopIntake } from "./pages/WorkshopIntake";
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
 import { EmptyState } from "./components/EmptyState";
 import { useNavigate } from "react-router-dom";
 
@@ -59,9 +63,13 @@ export function App() {
               <Route path="/remediation/:id" element={<Remediation />} />
               <Route path="/report/:id" element={<Report />} />
               <Route path="/fleet" element={<Fleet />} />
+<<<<<<< HEAD
               <Route path="/whitelist" element={<Whitelist />} />
               <Route path="/pairing" element={<Pairing />} />
               <Route path="/auth" element={<ChallengeAuth />} />
+=======
+              <Route path="/intake" element={<WorkshopIntake />} />
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

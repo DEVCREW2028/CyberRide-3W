@@ -10,9 +10,13 @@ import {
   RotateCcw,
   Sparkles,
   ExternalLink,
+<<<<<<< HEAD
   Fingerprint,
   Bluetooth,
   KeyRound
+=======
+  ClipboardList
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
 } from "lucide-react";
 import { useToast } from "../context/ToastContext";
 import { resetFleetToInitial } from "../logic/storage";
@@ -30,6 +34,7 @@ export function Sidebar({ isOpen, onClose }) {
 
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/intake", label: "Workshop Intake", icon: ClipboardList },
     { to: "/vehicles", label: "Vehicle Fleet", icon: Car },
     { to: "/fleet", label: "Fleet Security Overview", icon: BarChart3 },
     { to: "/whitelist", label: "Device Whitelisting", icon: Fingerprint },

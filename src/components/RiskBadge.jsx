@@ -1,5 +1,5 @@
 import React from "react";
-import { ShieldCheck, AlertTriangle, AlertOctagon, CheckCircle2, XCircle, HelpCircle } from "lucide-react";
+import { ShieldCheck, AlertTriangle, AlertOctagon, CheckCircle2, XCircle, HelpCircle, Clock } from "lucide-react";
 
 export function RiskBadge({ status, size = "md", showIcon = true, className = "" }) {
   const norm = (status || "").toUpperCase();
@@ -8,7 +8,11 @@ export function RiskBadge({ status, size = "md", showIcon = true, className = ""
   let Icon = HelpCircle;
   let label = status || "Unknown";
 
-  if (norm === "LOW" || norm === "SECURE" || norm === "PASS") {
+  if (norm === "PENDING SCAN" || norm === "PENDING" || norm === "UNASSESSED" || norm === "NOT ASSESSED") {
+    bg = "bg-slate-100 text-slate-600 border-slate-300";
+    Icon = Clock;
+    label = "Pending Scan";
+  } else if (norm === "LOW" || norm === "SECURE" || norm === "PASS") {
     bg = "bg-emerald-50 text-emerald-700 border-emerald-200";
     Icon = norm === "PASS" ? CheckCircle2 : ShieldCheck;
     if (norm === "LOW") label = "Low Risk";

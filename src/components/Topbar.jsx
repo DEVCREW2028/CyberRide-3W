@@ -14,9 +14,13 @@ export function Topbar({ onToggleSidebar }) {
   else if (location.pathname.startsWith("/remediation/")) pageTitle = "Remediation Workflow";
   else if (location.pathname.startsWith("/report/")) pageTitle = "Security Readiness Report";
   else if (location.pathname === "/fleet") pageTitle = "Fleet Security Overview";
+<<<<<<< HEAD
   else if (location.pathname === "/whitelist") pageTitle = "Device Whitelisting & Access Control";
   else if (location.pathname === "/pairing") pageTitle = "Strong BLE Pairing Security";
   else if (location.pathname === "/auth") pageTitle = "Challenge–Response Authentication";
+=======
+  else if (location.pathname === "/intake") pageTitle = "Workshop Intake";
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
   else if (location.pathname === "/settings") pageTitle = "Settings & About";
 
   return (

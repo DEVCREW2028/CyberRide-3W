@@ -40,6 +40,7 @@ export function Vehicles() {
     if (!matchesSearch) return false;
 
     if (statusFilter === "ALL") return true;
+    if (statusFilter === "PENDING") return v.status === "Pending Scan" || !v.riskScore;
     if (statusFilter === "SECURE") return v.status === "Secure";
     if (statusFilter === "WARNING") return v.status === "Needs Attention";
     if (statusFilter === "HIGH_RISK") return v.status === "High Risk";
@@ -60,6 +61,13 @@ export function Vehicles() {
 
         {/* View Toggle */}
         <div className="flex items-center space-x-2">
+          <Link
+            to="/intake"
+            className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"
+          >
+            <Wrench className="w-3.5 h-3.5" />
+            <span>New workshop intake</span>
+          </Link>
           <div className="bg-slate-100 p-1 rounded-xl flex items-center space-x-1 border border-slate-200">
             <button
               type="button"
@@ -109,6 +117,7 @@ export function Vehicles() {
         <div className="flex items-center space-x-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
           {[
             { id: "ALL", label: `All (${vehicles.length})` },
+            { id: "PENDING", label: `Pending Scan (${vehicles.filter(v => v.status === "Pending Scan" || !v.riskScore).length})` },
             { id: "SECURE", label: `Secure (${vehicles.filter(v => v.status === "Secure").length})` },
             { id: "WARNING", label: `Needs Attention (${vehicles.filter(v => v.status === "Needs Attention").length})` },
             { id: "HIGH_RISK", label: `High Risk (${vehicles.filter(v => v.status === "High Risk").length})` },

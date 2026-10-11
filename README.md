@@ -37,6 +37,7 @@ The underlying security concern is not hypothetical: government-reported finding
 
 CyberRide 3W turns wireless-BMS security concerns into a simple, explainable assessment workflow.
 
+<<<<<<< HEAD
 Instead of presenting only technical warnings, the prototype connects each assessment finding to a risk explanation and recommended corrective action. Users can then simulate remediation, re-run the assessment, compare results, and generate a report.
 
 ### The CyberRide Workflow
@@ -126,6 +127,19 @@ These are demonstration profiles, not verified real-world vehicles.
 **Demo objective:** Show one complete journey from identifying a potential weakness to understanding it, reviewing corrective guidance, and verifying the change in the simulated assessment.
 
 Actual scores, findings, and status changes depend on the assessment rules implemented in the application.
+=======
+1. **Assess** — Select a simulated e-rickshaw BMS profile **or** complete the workshop intake (`/intake`) and run the assessment.
+2. **Explain** — Review findings, risk levels, and potential security implications.
+3. **Improve** — Follow the recommended remediation checklist.
+4. **Re-test** — Run a new simulated assessment and compare the results.
+5. **Report** — Review and print the Security Readiness Report.
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
+
+Hackathon jury pack:
+
+- **Methodology & Architecture Document (with Mermaid Diagrams)**: [`METHODOLOGY.md`](./METHODOLOGY.md)
+- Two-page case study: [`CASE_STUDY.md`](./CASE_STUDY.md)
+- Three-minute pitch: [`PITCH.md`](./PITCH.md)
 
 ---
 
@@ -133,14 +147,22 @@ Actual scores, findings, and status changes depend on the assessment rules imple
 
 | Component | Technology |
 |---|---|
-| Frontend | React + Vite |
+| Frontend | React 18 + Vite |
 | Styling | Tailwind CSS |
 | Icons | Lucide React |
 | Routing | React Router DOM |
+<<<<<<< HEAD
 | State & Persistence | Browser Local Storage |
 | Assessment Engine | Deterministic, rule-based scoring |
 | Assessment Data | Simulated BMS profiles |
 | Report Output | Browser print functionality |
+=======
+| Backend & API | Node.js + Express (`server/index.js` on port 5001) |
+| Assessment Engine | Deterministic 5-stage weighted scoring pipeline |
+| Standards Alignment | AIS-156 (Amd 3), AIS-038 (Rev 2), ISO/SAE 21434, UNECE WP.29 R155 |
+| State & Dual-Mode | Express API with graceful offline browser fallback |
+| Report Export | Browser print functionality + CSV Export |
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
 
 ### Design Principles
 
@@ -174,18 +196,35 @@ cd CyberRide-3W
 npm install
 ```
 
+<<<<<<< HEAD
 ### 3. Start the Development Server
 
+=======
+Start the application:
+ 
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
 ```bash
+# Run both Backend API and Frontend UI simultaneously (Recommended):
+npm run dev:all
+
+# Or run frontend only (operates in offline browser mode):
 npm run dev
+
+# Or run the backend API server standalone:
+npm run server
 ```
 
+<<<<<<< HEAD
 Open the local URL displayed in your terminal. With the default Vite configuration, this is usually:
+=======
+Open the local application in your browser:
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
 
 ```text
 http://localhost:5173
 ```
 
+<<<<<<< HEAD
 ### 4. Run Automated Tests
 
 To run the automated test suite for Device Whitelisting, access control evaluation, validation rules, and persistence:
@@ -201,6 +240,11 @@ npm run build
 ```
 
 If the project is already present on your computer, open its directory and run the installation and development commands there.
+=======
+Backend REST API endpoints will be accessible at `http://localhost:5001/api`.
+
+> If you already have the project locally, skip the cloning step and run the installation commands from the project directory.
+>>>>>>> 8efc294 (Add Methodology & Architecture specification, Express backend assessment engine, and live scan workflow)
 
 ---
 

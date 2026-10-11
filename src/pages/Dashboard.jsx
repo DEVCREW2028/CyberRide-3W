@@ -34,8 +34,10 @@ export function Dashboard() {
   const secureCount = vehicles.filter(v => v.status === "Secure").length;
   const warningCount = vehicles.filter(v => v.status === "Needs Attention").length;
   const highRiskCount = vehicles.filter(v => v.status === "High Risk").length;
+  const pendingCount = vehicles.filter(v => v.status === "Pending Scan" || !v.status).length;
 
   const highRiskVehicles = vehicles.filter(v => v.status === "High Risk" || v.status === "Needs Attention");
+  const vehiclesToDisplay = highRiskVehicles.length > 0 ? highRiskVehicles : vehicles.slice(0, 3);
 
   return (
     <div className="space-y-6">
@@ -68,6 +70,14 @@ export function Dashboard() {
             >
               <Sparkles className="w-4 h-4" />
               <span>Start Security Assessment</span>
+            </Link>
+
+            <Link
+              to="/intake"
+              className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm rounded-xl border border-indigo-400/30 transition-all flex items-center gap-2"
+            >
+              <Wrench className="w-4 h-4" />
+              <span>Workshop intake (7 questions)</span>
             </Link>
 
             <Link
@@ -253,9 +263,13 @@ export function Dashboard() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Vehicles Requiring Attention</h3>
+            <h3 className="text-base font-bold text-slate-900">
+              {highRiskVehicles.length > 0 ? "Vehicles Requiring Attention" : "Fleet Awaiting Live Security Scan"}
+            </h3>
             <p className="text-xs text-slate-500">
-              High-risk or misconfigured vehicles requiring security remediation
+              {highRiskVehicles.length > 0
+                ? "Live scan detected weaknesses requiring workshop hardening"
+                : "Select any vehicle below to run the live BLE GATT assessment engine"}
             </p>
           </div>
           <Link
@@ -268,7 +282,7 @@ export function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {highRiskVehicles.map((vehicle) => (
+          {vehiclesToDisplay.map((vehicle) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} />
           ))}
         </div>
