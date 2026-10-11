@@ -15,7 +15,8 @@ import {
   TrendingUp,
   Sparkles,
   Info,
-  Car
+  Car,
+  Calculator
 } from "lucide-react";
 import { getVehicleById, getAssessmentResult } from "../logic/storage";
 import { runSecurityAssessment } from "../logic/assessmentEngine";
@@ -24,6 +25,7 @@ import { RiskScore } from "../components/RiskScore";
 import { FindingCard } from "../components/FindingCard";
 import { AssessmentCheck } from "../components/AssessmentCheck";
 import { EmptyState } from "../components/EmptyState";
+import { ExplainableScoring } from "../components/ExplainableScoring";
 
 export function Results() {
   const { id } = useParams();
@@ -108,6 +110,16 @@ export function Results() {
               <span className="bg-white/10 px-2 py-1 rounded">Model: <strong>{vehicle.model}</strong></span>
               <span className="bg-white/10 px-2 py-1 rounded">BMS: <strong>{vehicle.bmsModel}</strong></span>
             </div>
+
+            <div className="pt-2">
+              <a
+                href="#explainable-scoring"
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-white text-xs font-semibold transition-all backdrop-blur-xs"
+              >
+                <Calculator className="w-3.5 h-3.5 text-blue-300" />
+                <span>Explain How We Calculated This ↓</span>
+              </a>
+            </div>
           </div>
 
           {/* Risk Score Dial Card */}
@@ -152,6 +164,9 @@ export function Results() {
           </Link>
         </div>
       )}
+
+      {/* How CyberRide Reached This Result (Explainable Scoring) */}
+      <ExplainableScoring vehicle={vehicle} assessment={current} />
 
       {/* Two Column Layout: Key Findings & Recommended Fixes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
